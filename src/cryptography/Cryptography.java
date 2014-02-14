@@ -5,8 +5,7 @@
 package cryptography;
 
 import java.awt.Point;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -20,16 +19,91 @@ public class Cryptography {
     public static void main(String[] args) {
         // TODO code application logic here
         
+      
+        /**
+         *  Example usage
+         */
+        System.out.println("Ceaser cipher Encoded text: "+ceaserEncode(3,"My name is Zhanserik"));
+        System.out.println("Ceaser cipher Decoded text: "+ceaserDecode(3,"Pb qdph lv Ckdqvhuln"));
+        System.out.println();
         
-        //System.out.println("Encoded text: "+polyAlphabeticEncode("deceptive", "WE ARE discovered save yourself"));
-        //System.out.println("Decoded text: "+polyAlphabeticDecode("deceptive","ZI EGX ymvgqztkmy vexi rwpvvinj"));
+        System.out.println("PolyAlphabetic cipher Encoded text: "+polyAlphabeticEncode("deceptive", "WE ARE discovered save yourself"));
+        System.out.println("PolyAlphabetic cipher Decoded text: "+polyAlphabeticDecode("deceptive","ZI EGX ymvgqztkmy vexi rwpvvinj"));
+        System.out.println();
         
-//        System.out.println(ceaserDecode(3,"khoor"));
-//        System.out.println(ceaserEncode(3,"My name is Zhanserik"));
-//        System.out.println(ceaserDecode(3,"Pb qdph lv Ckdqvhuln"));
-        System.out.println("Encoded text: " + playfairEncode("MONAR","HELLOFROMHEAVEN") );
-        System.out.println("Decoded text: " + playfairDecode("MONAR","KCIZHRLFNOKCMYDA") );
+        System.out.println("Playfair Encoded text: " + playfairEncode("MONAR","HELLO FROM HEAVEN") );
+        System.out.println("Playfair Decoded text: " + playfairDecode("MONAR","KCIZHR LFNO KCMYDA") );
+        System.out.println();
+        
     }
+    
+    
+    public static String ceaserEncode(int shift, String text){
+        String encodedText="";
+        shift = shift%26;                                
+        
+         for (int i=0;i<text.length();i++){
+             boolean isUpperCase = false;
+             int letter = text.charAt(i);
+             
+             if(letter >= 'A' && letter <= 'Z')          
+                 isUpperCase = true;
+             
+             if(letter == (int)' '){
+                 encodedText = encodedText + (char)letter;
+                 continue;
+             }
+             
+             letter += shift;
+             if(isUpperCase){
+                 if (letter > (int)'Z') 
+                    letter = (letter - 26);
+             }else{
+                 if(letter > 'z')
+                     letter = (letter - 26);
+             }
+                   
+             encodedText = encodedText + (char)letter;
+         }
+         
+         return encodedText;
+    }
+    
+    public static String ceaserDecode(int shift, String text){
+        String decodedText = "";
+        
+        shift = shift%26;
+        
+        for (int i=0; i<text.length(); i++){
+            boolean isUpperCase = false;
+            int letter = text.charAt(i);
+            
+            if(letter >= 'A' && letter <= 'Z')
+                 isUpperCase = true;
+            
+            if(letter == (int)' '){
+                 decodedText = decodedText + (char)letter;
+                 continue;
+             }
+            
+            letter -= shift;
+           
+            if(isUpperCase){
+                 if (letter < (int)'A') 
+                    letter = (letter + 26);
+             }else{
+                 if(letter < 'a')
+                     letter = (letter + 26);
+             }
+            
+           
+            
+            decodedText = decodedText + (char)letter; 
+        }
+        
+        return decodedText;
+    }
+    
     
     private static char[][] polyAlphabeticMap(boolean isUppercase){
         
@@ -63,10 +137,10 @@ public class Cryptography {
                 keys[i] = temporary[i%key.toUpperCase().toCharArray().length]; 
             }
         }
+        
         else{
             keys = key.toUpperCase().toCharArray();
         }
-        
         
         char mapUppercase[][] = polyAlphabeticMap(true);
         char mapLowercase[][] = polyAlphabeticMap(false);
@@ -90,6 +164,11 @@ public class Cryptography {
         
         return encodedText;
     }
+    
+    
+    /**
+     *  Poly Alphabetic Cipher
+     */
     public static String polyAlphabeticDecode(String key, String text){
         String decodedText = "";
         
@@ -136,75 +215,6 @@ public class Cryptography {
         return decodedText;
     }
     
-    public static String ceaserEncode(int shift, String text){
-        String encodedText="";
-        shift = shift%26;
-        
-         for (int i=0;i<text.length();i++){
-             boolean isUpperCase = false;
-             int letter = text.charAt(i);
-             
-             if(letter >= 'A' && letter <= 'Z')
-                 isUpperCase = true;
-             
-             if(letter == (int)' '){
-                 encodedText = encodedText + (char)letter;
-                 continue;
-             }
-             
-             letter += shift;
-             if(isUpperCase){
-                 if (letter > (int)'Z') 
-                    letter = (letter - 26);
-             }else{
-                 if(letter > 'z')
-                     letter = (letter - 26);
-             }
-                   
-                 
-             
-    
-             encodedText = encodedText + (char)letter;
-         }
-         
-         return encodedText;
-    }
-    public static String ceaserDecode(int shift, String text){
-        String decodedText = "";
-        
-        shift = shift%26;
-        
-        for (int i=0; i<text.length(); i++){
-            boolean isUpperCase = false;
-            int letter = text.charAt(i);
-            
-            if(letter >= 'A' && letter <= 'Z')
-                 isUpperCase = true;
-            
-            if(letter == (int)' '){
-                 decodedText = decodedText + (char)letter;
-                 continue;
-             }
-            
-            letter -= shift;
-           
-            if(isUpperCase){
-                 if (letter < (int)'A') 
-                    letter = (letter + 26);
-             }else{
-                 if(letter < 'a')
-                     letter = (letter + 26);
-             }
-            
-           
-            
-            decodedText = decodedText + (char)letter; 
-        }
-        
-        return decodedText;
-    }
-    
-    
     private static char[][] playfairMap(String key){
         char keyMap[][] = new char[5][5];
         
@@ -227,7 +237,7 @@ public class Cryptography {
     
     private static Point playfairGetLocation(char c, char[][] map){
         Point p = new Point();
-        
+       
         for(int i=0; i<5; i++){
             for(int j=0; j<5; j++){
                 if(c == map[i][j])
@@ -238,7 +248,8 @@ public class Cryptography {
         return p;
     } 
     
-    private static String playfairCipher(String text){
+    private static String playfairCipher(String text, String key){
+        String encodedWord = "";
         int length = text.length()/2 + text.length()%2;
         text = text.toUpperCase();
         for(int i = 0; i < length -1; i++){
@@ -246,19 +257,9 @@ public class Cryptography {
                 text = new StringBuffer(text).insert(2*i + 1, 'X').toString();
             }
         }
-        return text;
-    }
-    
-    
-    public static String playfairEncode(String key, String text){
-        String encodedText = "";
         
-        key = key.toUpperCase();
-        key = key.replace('J', 'I');
         char keyMap[][] = playfairMap(key);
         
-        int length = text.length()/2 + text.length()%2;
-        text = playfairCipher(text);
         
         String[] couples = new String[length]; 
         
@@ -303,18 +304,32 @@ public class Cryptography {
         }
         
         for(int i = 0; i < encodedCouples.length; i++){
-            encodedText = encodedText + "" + encodedCouples[i];
+            encodedWord = encodedWord + "" + encodedCouples[i];
         }
+        
+        return encodedWord;
+        //return text;
+    }
+    
+    
+    public static String playfairEncode(String key, String text){
+        String encodedText = "";
+        text = text.toUpperCase();
+        key = key.toUpperCase();
+        key = key.replace('J', 'I');
+        StringTokenizer st = new StringTokenizer(text);
+        
+        while (st.hasMoreTokens()){
+           encodedText = encodedText + playfairCipher(st.nextToken(), key) + " "; 
+        }
+        
         
         return encodedText;
     }
     
-    public static String playfairDecode(String key ,String text){
-        String decodedText = "";
-        text = text.toUpperCase();
+    private static String playfairDecipher(String text, String key){
+        String decodedWord = "";
         
-        key = key.toUpperCase();
-        key = key.replace('J', 'I');
         char keyMap[][] = playfairMap(key);
         
         for(int i=0; i < text.length()/2 ; i++){
@@ -344,9 +359,23 @@ public class Cryptography {
                 secondY = t;
             }
             
-            decodedText = decodedText + "" + keyMap[firstX][firstY] + keyMap[secondX][secondY];
+            decodedWord = decodedWord + "" + keyMap[firstX][firstY] + keyMap[secondX][secondY];
         }
         
+        return decodedWord;
+    } 
+    
+    public static String playfairDecode(String key ,String text){
+        String decodedText = "";
+        text = text.toUpperCase();
+        key = key.toUpperCase();
+        key = key.replace('J', 'I');
+
+        StringTokenizer st = new StringTokenizer(text);
+        
+        while (st.hasMoreTokens()){
+           decodedText = decodedText + playfairDecipher(st.nextToken(), key) + " "; 
+        }
         return decodedText;
     }
 }

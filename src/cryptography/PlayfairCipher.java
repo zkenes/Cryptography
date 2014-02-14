@@ -8,12 +8,12 @@ package cryptography;
  *
  * @author zhanserikkenes
  */
-public class PolyalphabeticCipher extends javax.swing.JFrame {
+public class PlayfairCipher extends javax.swing.JFrame {
 
     /**
-     * Creates new form PolyalphabeticCipher
+     * Creates new form PlayfairCipher
      */
-    public PolyalphabeticCipher() {
+    public PlayfairCipher() {
         initComponents();
     }
 
@@ -27,106 +27,90 @@ public class PolyalphabeticCipher extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        encodedText = new javax.swing.JTextArea();
+        jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        decodedText = new javax.swing.JTextArea();
+        jTextArea2 = new javax.swing.JTextArea();
         encode = new javax.swing.JButton();
         decode = new javax.swing.JButton();
-        keyField = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        encodedText.setColumns(20);
-        encodedText.setRows(5);
-        jScrollPane1.setViewportView(encodedText);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
-        decodedText.setColumns(20);
-        decodedText.setRows(5);
-        jScrollPane2.setViewportView(decodedText);
+        jTextArea2.setColumns(20);
+        jTextArea2.setRows(5);
+        jScrollPane2.setViewportView(jTextArea2);
 
-        encode.setLabel("encode");
+        encode.setLabel("Encode");
         encode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 encodeActionPerformed(evt);
             }
         });
 
-        decode.setLabel("decode");
+        decode.setLabel("Decode");
         decode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 decodeActionPerformed(evt);
             }
         });
 
-        keyField.setText("key");
-        keyField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                keyFieldActionPerformed(evt);
-            }
-        });
+        jTextField1.setText("key");
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(16, 16, 16)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap()
                         .add(encode)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(keyField)
+                        .add(jTextField1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(decode))
-                    .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(layout.createSequentialGroup()
-                                .add(12, 12, 12)
-                                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 374, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                            .add(layout.createSequentialGroup()
-                                .add(14, 14, 14)
-                                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 370, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                        .add(0, 8, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+                    .add(jScrollPane2))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
-                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(21, 21, 21)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(encode)
                     .add(decode)
-                    .add(keyField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(35, 35, 35))
+                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(19, 19, 19))
         );
+
+        encode.getAccessibleContext().setAccessibleName("Encode");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void keyFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keyFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_keyFieldActionPerformed
-
     private void encodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_encodeActionPerformed
-        // TODO add your handling code here:\
-        String text = decodedText.getText();
-        String key = keyField.getText();
-        String encoded = Cryptography.polyAlphabeticEncode(key, text);
-        encodedText.setText(encoded);
-        
+        // TODO add your handling code here:
+        String text = jTextArea1.getText();
+        String key = jTextField1.getText();
+        String encoded = Cryptography.playfairEncode(key, text);
+        jTextArea2.setText(encoded);
     }//GEN-LAST:event_encodeActionPerformed
 
     private void decodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decodeActionPerformed
         // TODO add your handling code here:
-        String text = encodedText.getText();
-        String key = keyField.getText();
-        String decoded = Cryptography.polyAlphabeticDecode(key, text);
-        
-        decodedText.setText(decoded);
+        String text = jTextArea2.getText();
+        String key = jTextField1.getText();
+        String decoded = Cryptography.playfairDecode(key, text);
+        jTextArea1.setText(decoded);
     }//GEN-LAST:event_decodeActionPerformed
 
     /**
@@ -146,30 +130,30 @@ public class PolyalphabeticCipher extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PolyalphabeticCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PlayfairCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PolyalphabeticCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PlayfairCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PolyalphabeticCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PlayfairCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PolyalphabeticCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PlayfairCipher.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new PolyalphabeticCipher().setVisible(true);
+                new PlayfairCipher().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton decode;
-    private javax.swing.JTextArea decodedText;
     private javax.swing.JButton encode;
-    private javax.swing.JTextArea encodedText;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField keyField;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
