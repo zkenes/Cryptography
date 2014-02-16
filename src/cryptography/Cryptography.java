@@ -125,22 +125,27 @@ public class Cryptography {
         
         return map;
     }
-    public static String polyAlphabeticEncode(String key, String text){
-        
-        String encodedText = "";
-        char keys[] = new char[text.toUpperCase().toCharArray().length];
+    private static char[] polyAlphabeticKeyCheck(String key, String text){
         char texts[] = text.toCharArray();
-        
-        if(key.toUpperCase().toCharArray().length < texts.length){
+        char keys[] = new char[text.length()];
+        if(key.length() < texts.length){
             char temporary[] = key.toUpperCase().toCharArray();
             for(int i=0; i<texts.length; i++){
-                keys[i] = temporary[i%key.toUpperCase().toCharArray().length]; 
+                keys[i] = temporary[i%key.length()]; 
             }
         }
         
         else{
             keys = key.toUpperCase().toCharArray();
         }
+        return keys;
+    }
+    public static String polyAlphabeticEncode(String key, String text){
+        
+        String encodedText = "";
+        char keys[] = polyAlphabeticKeyCheck(key, text);
+        char texts[] = text.toCharArray();
+        
         
         char mapUppercase[][] = polyAlphabeticMap(true);
         char mapLowercase[][] = polyAlphabeticMap(false);
@@ -172,18 +177,9 @@ public class Cryptography {
     public static String polyAlphabeticDecode(String key, String text){
         String decodedText = "";
         
-        char keys[] = new char[text.toUpperCase().toCharArray().length];
+        char keys[] = polyAlphabeticKeyCheck(key, text);
         char texts[] = text.toCharArray();
         
-        if(key.toUpperCase().toCharArray().length < texts.length){
-            char temporary[] = key.toUpperCase().toCharArray();
-            for(int i=0; i<texts.length; i++){
-                keys[i] = temporary[i%key.toUpperCase().toCharArray().length]; 
-            }
-        }
-        else{
-            keys = key.toUpperCase().toCharArray();
-        }
         
         char mapUppercase[][] = polyAlphabeticMap(true);
         char mapLowercase[][] = polyAlphabeticMap(false);
