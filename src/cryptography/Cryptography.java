@@ -6,7 +6,7 @@ package cryptography;
 
 import java.awt.Point;
 import java.util.StringTokenizer;
-
+import java.math.*;
 /**
  *
  * @author zhanserikkenes
@@ -31,13 +31,21 @@ public class Cryptography {
         System.out.println("PolyAlphabetic cipher Decoded text: "+polyAlphabeticDecode("deceptive","ZI EGX ymvgqztkmy vexi rwpvvinj"));
         System.out.println();
         
-        System.out.println("Playfair Encoded text: " + playfairEncode("MONAR","HELLO FROM HEAVEN") );
-        System.out.println("Playfair Decoded text: " + playfairDecode("MONAR","KCIZHR LFNO KCMYDA") );
+        System.out.println("Playfair Encoded text: " + playfairEncode("MONAR","HELLO, FROM, HEAVEN") );
+        System.out.println("Playfair Decoded text: " + playfairDecode("MONAR","KCIZHR, LFNO, KCMYDA") );
         System.out.println();
+        
+        System.out.println("Hill Encoded text: " + hillEncode("GYBNQKURP","COOOLBR COOOLAAA") );
+        System.out.println("Hill Decoded text: " + hillDecode("GYBNQKURP","YAULEOR YAUKUZAA") );
+        System.out.println();
+     
+        
         
     }
     
-    
+    /**
+     *  Ceaser Cipher
+     */
     public static String ceaserEncode(int shift, String text){
         String encodedText="";
         shift = shift%26;                                
@@ -68,7 +76,6 @@ public class Cryptography {
          
          return encodedText;
     }
-    
     public static String ceaserDecode(int shift, String text){
         String decodedText = "";
         
@@ -103,8 +110,9 @@ public class Cryptography {
         
         return decodedText;
     }
-    
-    
+    /**
+     *  Poly Alphabetic Cipher
+     */
     private static char[][] polyAlphabeticMap(boolean isUppercase){
         
         char map[][] = new char[26][26];
@@ -169,11 +177,6 @@ public class Cryptography {
         
         return encodedText;
     }
-    
-    
-    /**
-     *  Poly Alphabetic Cipher
-     */
     public static String polyAlphabeticDecode(String key, String text){
         String decodedText = "";
         
@@ -210,7 +213,9 @@ public class Cryptography {
         
         return decodedText;
     }
-    
+    /**
+     *  PlayFair Cipher
+     */
     private static char[][] playfairMap(String key){
         char keyMap[][] = new char[5][5];
         
@@ -229,8 +234,7 @@ public class Cryptography {
             }
         }
         return keyMap;
-    }
-    
+    }  
     private static Point playfairGetLocation(char c, char[][] map){
         Point p = new Point();
        
@@ -242,12 +246,12 @@ public class Cryptography {
         }
         
         return p;
-    } 
-    
+    }   
     private static String playfairCipher(String text, String key){
         String encodedWord = "";
         int length = text.length()/2 + text.length()%2;
         text = text.toUpperCase();
+        
         for(int i = 0; i < length -1; i++){
             if(text.charAt(2*i) == text.charAt(2*i + 1)){
                 text = new StringBuffer(text).insert(2*i + 1, 'X').toString();
@@ -306,23 +310,26 @@ public class Cryptography {
         return encodedWord;
         //return text;
     }
-    
-    
     public static String playfairEncode(String key, String text){
         String encodedText = "";
         text = text.toUpperCase();
         key = key.toUpperCase();
         key = key.replace('J', 'I');
-        StringTokenizer st = new StringTokenizer(text);
+        StringTokenizer st = new StringTokenizer(text, ".,!? ", true);
         
         while (st.hasMoreTokens()){
-           encodedText = encodedText + playfairCipher(st.nextToken(), key) + " "; 
+           String component = st.nextToken();
+ 
+           if(component.charAt(0) > 'A' && component.charAt(0) < 'Z')
+               encodedText = encodedText + playfairCipher(component, key) ;
+           
+           else
+            encodedText = encodedText + component;
         }
         
         
         return encodedText;
     }
-    
     private static String playfairDecipher(String text, String key){
         String decodedWord = "";
         
@@ -359,19 +366,355 @@ public class Cryptography {
         }
         
         return decodedWord;
-    } 
-    
+    }
     public static String playfairDecode(String key ,String text){
         String decodedText = "";
         text = text.toUpperCase();
         key = key.toUpperCase();
         key = key.replace('J', 'I');
 
-        StringTokenizer st = new StringTokenizer(text);
+        StringTokenizer st = new StringTokenizer(text,".,!? ", true);
         
         while (st.hasMoreTokens()){
-           decodedText = decodedText + playfairDecipher(st.nextToken(), key) + " "; 
+            String component = st.nextToken();
+           if(component.charAt(0) > 'A' && component.charAt(0) < 'Z')
+               decodedText = decodedText + playfairDecipher(component, key) ;
+           
+           else
+            decodedText = decodedText + component; 
         }
         return decodedText;
     }
+     
+    /**
+     *  Hill Cipher
+     */
+    public static void printHillMap(int map[][], boolean isInversed){
+        if(!isInversed)
+            System.out.println("Hill Cipher Key For Encrypting");
+        else
+            System.out.println("Hill Cipher Key For Decrypting");
+        
+        for(int i=0; i<map.length; i++){
+            System.out.print("|");
+            for(int j=0; j<map.length; j++){
+                System.out.print(map[i][j] + (((Math.log10(map[i][j]))>1)?" ":"  "));
+            }
+            System.out.print("|\n");
+        }
+        System.out.println();
+    }   
+    private static boolean checkHillMap(int map[][]){
+        boolean isAvailable = false;
+        
+        Matrix keyMap = new Matrix(map);
+        
+        int determin = Matrix.determinant(keyMap);
+        int b = 26;
+        while(determin!=0 && b!=0){
+            int c = b;
+            b = determin%b;
+            determin = c;
+        }
+        int gcd = determin+b;
+        
+        if(Matrix.determinant(keyMap) > 0 && gcd == 1)
+            isAvailable = true;
+        
+        
+        return isAvailable;
+    }
+    private static int[][] hillMap(String key){
+        
+        int size = (int)Math.sqrt((double)key.length());
+        int map[][] = new int[size][size];
+       
+        for(int i=0; i<key.length(); i++)
+            map[i/size][i%size] = (int)key.charAt(i)%65;
+        
+        //batyahan@gmail.com
+    
+        return map;
+    }
+    
+    private static int[][] hillInverseMap(int map[][]){
+        Matrix keyMap = Matrix.inverse(new Matrix(map));
+        int inversedKey[][] = keyMap.getValues();
+        
+        for(int i=0; i<inversedKey.length; i++)
+            for(int j=0; j<inversedKey[0].length; j++)
+                inversedKey[i][j] = inversedKey[i][j]>0?(inversedKey[i][j]%26):(inversedKey[i][j]%26 + 26);
+                
+        return inversedKey;
+    }
+    private static int[] hillWord2Vector(String word){
+        int result[] = new int[word.length()];
+        
+        for(int i=0; i < word.length(); i++)
+            result[i] = (int)word.charAt(i)%65;
+        
+        return result;
+    }
+    private static String hillVector2Word(int vector[]){
+        String word = "";
+        
+        for(int i=0; i<vector.length; i++)
+            word = word + "" + (char)(vector[i]+65);
+            
+        return word;
+    }
+    private static String[] hillWords(int index, String text){
+        int size = text.length()/index + (((text.length()%index)>0)?1:0);
+        String components[] = new String[size];
+        
+        int cell = 0;
+        String conatainer = "";
+        for(int i=0; i<text.length(); i++){
+            if(conatainer.length() == index){
+                components[cell] = conatainer;
+                cell ++;
+                conatainer = "";
+                
+            }
+            conatainer = conatainer + "" + text.charAt(i);
+        }
+        
+        if(conatainer.length() > 0)
+            components[cell] = conatainer;
+        
+        return components;
+    }
+    private static int[] hillMultiply(int first[][], int second[]){
+        int firstRows = first.length;
+        int firstCols = first[0].length;
+        
+        if(second.length != firstCols)
+            return second;
+            
+        //int result[][] = new int[firstRows][secondCols];
+        int result[] = new int[firstRows];
+        for(int i=0; i < firstRows; i++)
+            for(int j=0; j < firstCols; j++)
+                result[i] = (result[i] + first[i][j] * second[j])%26;
+                
+        return result;
+    }
+    private static String hillCipher(String key, String text){
+        String encodedWord = "";
+        
+        int size = (int)Math.sqrt((double)key.length());
+        if(size > text.length())
+            return text;
+        int map[][] = hillMap(key);
+        String words[] = hillWords(size, text);
+        
+        for(int i=0; i<words.length; i++){
+            int vector[] = hillWord2Vector(words[i]);
+            int encodedVector[] = hillMultiply(map, vector);
+            encodedWord = encodedWord + "" + hillVector2Word(encodedVector);
+            
+        }
+        return encodedWord;
+    }
+    public static String hillEncode(String key, String text){
+        String encodedText = "";
+        
+        text = text.toUpperCase();
+        key = key.toUpperCase();
+        
+        printHillMap(hillMap(key), false);
+        
+        StringTokenizer st = new StringTokenizer(text, ".,!? ", true);
+        
+        while (st.hasMoreTokens()){
+           String component = st.nextToken();
+           
+           if(component.charAt(0) > 'A' && component.charAt(0) < 'Z')
+               encodedText = encodedText + hillCipher(key, component) ;
+           
+           else
+               encodedText = encodedText + component;
+        }
+        return encodedText;
+    }  
+    private static String hillDecipher(String key, String text){
+        String decodedWord = "";
+        
+        int map[][] = hillMap(key);
+        int inversedMap[][] = hillInverseMap(map);
+        
+        int size = (int)Math.sqrt((double)key.length());
+        if(size > text.length())
+            return text;
+        String words[] = hillWords(size, text);
+        
+        for(int i=0; i<words.length; i++){
+            int vector[] = hillWord2Vector(words[i]);
+            int encodedVector[] = hillMultiply(inversedMap, vector);
+            
+            decodedWord = decodedWord + "" + hillVector2Word(encodedVector);
+            
+        }
+       
+        
+        return decodedWord;
+    } 
+    public static String hillDecode(String key, String text){
+        String decodedText = "";
+        
+        text = text.toUpperCase();
+        key = key.toUpperCase();
+        
+        if(!checkHillMap(hillMap(key)))
+            return "[WARNING: Your key is not invertable]";
+        
+        printHillMap(hillInverseMap(hillMap(key)), true);
+        
+        StringTokenizer st = new StringTokenizer(text, ".,!? ", true);
+        
+        while (st.hasMoreTokens()){
+           String component = st.nextToken();
+           
+           if(component.charAt(0) > 'A' && component.charAt(0) < 'Z')
+               decodedText = decodedText + hillDecipher(key, component) ;
+           
+           else
+            decodedText = decodedText + component;
+        }
+        
+        return decodedText;
+    }
+}
+
+
+class Matrix{
+   private int rows;
+   private int cols;
+   private int[][] matrix;
+   
+   public Matrix(int[][] dat){
+       this.matrix = dat;
+       this.rows = dat.length;
+       this.cols = dat[0].length;
+   }
+   public Matrix(int nrow, int ncols){
+       this.rows = nrow;
+       this.cols = ncols;
+       this.matrix = new int[nrow][ncols];
+   }
+   public void setRows(int row){
+       this.rows = row;
+   }
+   public int getRows(){
+       return this.rows;
+   }
+   public void setCols(int col){
+       this.cols = col;
+   }
+   public int getCols(){
+       return this.cols;
+   }
+   public void setValues(int[][] values){
+       this.matrix = values;
+   }
+   public int[][] getValues(){
+       return this.matrix;
+   }
+   public void setValueAt(int i, int j, int value){
+       this.matrix[i][j] = value;
+   }
+   public int getValueAt(int i, int j){
+       return this.matrix[i][j];
+   }
+   public boolean isSquare(){
+       return this.rows == this.cols;
+   }
+   public Matrix multiplyByConst(int constant){
+       Matrix mat = new Matrix(this.rows, this.cols);
+       for(int i=0; i < this.rows; i++){
+           for(int j=0; j < this.cols; j++){
+               mat.setValueAt(i, j, matrix[i][j] * constant);
+           }
+       }
+       return mat;
+   }
+   public static Matrix transpose(Matrix matrix){
+       Matrix transposed = new Matrix(matrix.getCols(), matrix.getRows());
+       for(int i=0; i<matrix.getRows(); i++){
+           for(int j=0; j<matrix.getCols(); j++){
+               transposed.setValueAt(j, i, matrix.getValueAt(i, j));
+           }
+       }
+       return transposed;
+   }
+   public static Matrix multiply(Matrix first, Matrix second){
+       Matrix result = new Matrix(first.getRows(), second.getCols());
+       
+       for(int i=0; i < result.getRows(); i++){
+           for(int j=0; j < result.getCols(); j++){
+               int sum = 0;
+               for(int k=0; k < first.getCols(); k++){
+                   sum += first.getValueAt(i, k) * second.getValueAt(k, j);
+               }
+               result.setValueAt(i, j, sum);
+           }
+       }
+       return result;
+   }
+   public static Matrix add(Matrix first, Matrix second){
+       if(first.getCols() != second.getCols() || first.getRows() != second.getRows())
+           return null;
+       Matrix result = new Matrix(first.getRows(), first.getCols());
+       
+       for(int i=0; i<first.getRows(); i++)
+           for(int j=0; j<first.getCols(); j++)
+               result.setValueAt(i, j, first.getValueAt(i, j) + second.getValueAt(i, j));
+       
+       return result;
+   } 
+   public static Matrix substruct(Matrix first, Matrix second){
+       return add(first, second.multiplyByConst(-1));
+   }
+   public static Matrix createSubMatrix(Matrix matrix, int row, int col){
+       Matrix mat = new Matrix(matrix.getRows() - 1, matrix.getCols() - 1);
+       int r = -1;
+       for(int i=0; i < matrix.getRows(); i++){
+           if(i == row)
+               continue;
+           r++;
+           int c= -1;
+           for(int j=0; j<matrix.getCols(); j++){
+               if(j == col)
+                   continue;
+               mat.setValueAt(r, ++c, matrix.getValueAt(i, j));
+           }
+       }
+       return mat;
+   } 
+   public static int determinant(Matrix matrix){
+       if(!matrix.isSquare())
+           return -1;
+       if(matrix.getCols() == 1)
+           return matrix.getValueAt(0, 0);
+       if(matrix.getCols() == 2)
+           return (matrix.getValueAt(0, 0) * matrix.getValueAt(1, 1)) - (matrix.getValueAt(0, 1) * matrix.getValueAt(1, 0));
+       int sum = 0;
+       
+       for(int i=0; i < matrix.getCols(); i++){
+           sum += (((i%2)==0)?1:-1) * matrix.getValueAt(0, i) * determinant(createSubMatrix(matrix,0,i));
+       }
+       return sum;
+   }
+   public static Matrix cofactor(Matrix matrix){
+       Matrix mat = new Matrix(matrix.getRows(), matrix.getCols());
+       
+       for(int i=0; i<matrix.getRows(); i++)
+           for(int j=0; j<matrix.getCols(); j++)
+               mat.setValueAt(i, j, (((i%2)==0)?1:-1) * (((j%2)==0)?1:-1) * determinant(createSubMatrix(matrix,i ,j)));
+       
+       return mat;   
+   }
+   public static Matrix inverse(Matrix matrix){
+       return (transpose(cofactor(matrix)).multiplyByConst(determinant(matrix)));
+   }
 }
