@@ -8,7 +8,7 @@ Created by Kenes Zhanserik. International Inforamtion Technology Uiniversity. In
         1. Ceaser cipher
         2. PolyAlphabetic cipher
         3. Playfair cipher
-        
+    	4. Hill cipher             [Not tested, please if you have any issues letme know. Completed version will be added soon]    
     
     Source code directory Cryptography/src/cryptography/
     
